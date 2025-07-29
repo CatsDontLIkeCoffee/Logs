@@ -15,21 +15,19 @@
       height: 100vh;
       text-align: center;
     }
-    input {
-      margin-top: 20px;
+    input, button {
+      margin-top: 10px;
       padding: 10px;
       font-size: 16px;
       background: black;
       color: #00ff99;
       border: 1px solid #00ff99;
     }
-    button {
-      margin-top: 10px;
-      padding: 10px;
-      background: #111;
-      color: #00ff99;
-      border: 1px solid #00ff99;
-      cursor: pointer;
+    #content {
+      margin-top: 20px;
+      text-align: left;
+      max-width: 600px;
+      white-space: pre-wrap;
     }
     .hidden {
       display: none;
@@ -42,20 +40,34 @@
   <input type="password" id="password" placeholder="Password">
   <button onclick="checkPassword()">Unlock</button>
 
-  <div id="content" class="hidden">
-    <h2>ACCESS GRANTED</h2>
-    <p>Welcome. You shouldn't be here.</p>
-    <p>Dev Log #1: <br> I used to play Minecraft a lot when I was little...</p>
-  </div>
+  <div id="content" class="hidden"></div>
 
   <script>
-    function checkPassword() {
+    async function checkPassword() {
       const pass = document.getElementById('password').value;
+      const contentDiv = document.getElementById('content');
+
       if (pass === "9:30") {
-        document.getElementById('content').classList.remove('hidden');
+        const response = await fetch("a83jf93.txt"); // your hidden log file
+        const text = await response.text();
+        contentDiv.classList.remove('hidden');
+        typeText(text, contentDiv);
       } else {
         alert("ACCESS DENIED");
       }
+    }
+
+    function typeText(text, element) {
+      element.innerHTML = "";
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, 25); // typing speed
+        }
+      }
+      typing();
     }
   </script>
 </body>
